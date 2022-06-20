@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+
 import json
 import config
 import logging
@@ -6,18 +6,6 @@ import os
 import sys
 import shutil
 from web_data_loader import WebLoader
-
-
-def prepare_directory(directory):
-    if os.path.exists(directory):
-        shutil.rmtree(directory)
-
-    os.makedirs(directory)
-
-
-def fetch_images_from_text(text):
-    soup = BeautifulSoup(text)
-    film_list = soup.find('div', {'class': 'profileFilmsList'})
 
 
 def save_content_to_file(web_content, file_name):
@@ -47,31 +35,7 @@ def extract_data():
         fetch_raw_data(data)
 
 
-def get_files_for_processing(data_path: str) -> list:
-    files = os.listdir(data_path)
 
-    files = [
-        os.path.join(data_path, fn) for fn in filter(lambda x: x.endswith('.html'), files)]
-
-    logging.info(f'{len(files)} file(s) were found in directory {data_path}')
-
-    return files
-
-
-def read_file_and_extract_images(file_name):
-
-    with open(file_name, 'r') as f:
-        content = f.read()
-
-    fetch_images_from_text(content)
-
-
-
-def extract_images():
-    files_for_processing = get_files_for_processing(config.RAW_DATA_PATH)
-
-    for file in files_for_processing:
-        read_file_and_extract_images(file)
 
 
 
