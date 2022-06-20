@@ -5,14 +5,14 @@ from web_data_loader import WebLoader
 
 
 def save_content_to_file(web_content, file_name):
-    with open(file_name, 'w') as f:
+    with open(file_name, 'w', encoding='utf-8') as f:
         f.write(web_content)
         logging.info(f'Content saved to file {file_name}')
 
 
 def fetch_raw_data(data, source_url, data_directory) -> None:
-    barcode = data.barcode
-    name = data.name
+    barcode = data['barcode']
+    name = data['name']
 
     logging.info(f'Processing barcode {barcode}, name {name}...')
     url = source_url % name

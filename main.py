@@ -7,7 +7,7 @@ import image_extractor
 
 
 def extract_content():
-    with open(config.PROCESSING_LIST, 'r') as f:
+    with open(config.PROCESSING_LIST, 'r', encoding='utf-8') as f:
         data_for_processing = json.load(f)
 
     for data in data_for_processing:
@@ -18,7 +18,7 @@ def extract_images():
     image_extractor.extract_images(config.RAW_DATA_PATH, config.PREP_DATA_PATH)
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
 
     logging.basicConfig(
         level=logging.INFO,
@@ -31,7 +31,7 @@ if __name__ == 'main':
 
     logging.info("Start script")
 
-    extract_content()
+    #extract_content()
 
     extract_images()
 
