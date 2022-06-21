@@ -3,3 +3,4 @@
 /venv/
 /script.log
 /test_image_extractor.py
+/geckodriver.log
