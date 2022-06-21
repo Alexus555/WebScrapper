@@ -1,3 +1,10 @@
+# ************************************************
+#
+# This piece of code was taken from
+# https://stackoverflow.com/questions/15445981/how-do-i-disable-the-security-certificate-check-in-python-requests
+#
+#*************************************************
+
 import warnings
 import contextlib
 
@@ -6,6 +13,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 
 old_merge_environment_settings = requests.Session.merge_environment_settings
+
 
 @contextlib.contextmanager
 def no_ssl_verification():

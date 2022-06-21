@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     logging.info("Start script")
 
-    #extract_content()
+    extract_content()
 
     extract_images()
 

@@ -23,7 +23,11 @@ def save_raw_image_to_file(raw_image, file_name):
 def save_description(image_directory, image_data_list):
     description_file_name = os.path.join(image_directory, 'description.json')
     with open(description_file_name, 'w', encoding='utf-8') as f:
-        json.dump(image_data_list, f)
+        json.dump(image_data_list,
+                  f,
+                  indent=4,
+                  sort_keys=True,
+                  ensure_ascii=False)
         logging.info(f'Description saved to file {description_file_name}')
 
 
@@ -39,9 +43,28 @@ def fetch_image_data_from_text(text: str) -> list:
             'processing_result': '',
         } for i in img_meta_list[:5]]
 
-    logging.info(f'{len(image_data_list)} image(s) were found in directory')
+    logging.info(f'{len(image_data_list)} image(s) were found in content')
 
     return image_data_list
+
+
+def get_description_from_content(text: str) -> str:
+    soup = BeautifulSoup(text, 'lxml')
+    meta_data = soup.find('meta', {'name': 'description'})
+
+    description = ''
+    if meta_data is not None:
+        description = \
+            str(
+                meta_data.attrs['content']
+            ).replace(
+                'Результаты поиска по запросу "',
+                ''
+            ).replace(
+                '" в Яндекс Картинках',
+                '')
+
+    return description
 
 
 def get_files_for_processing(data_path: str) -> list:
@@ -58,14 +81,19 @@ def get_files_for_processing(data_path: str) -> list:
 def read_file_and_extract_images(file_name: str, directory_for_save: str):
     logging.info(f'Reading file {file_name}...')
 
+    name = str(os.path.basename(file_name)).replace('.html', '').lower()
+    image_directory = os.path.join(directory_for_save, name)
+    if os.path.exists(image_directory) and len(os.listdir(image_directory)) > 1:
+        logging.info(f'The directory {image_directory} is not empty. Skipped...')
+        return
+
+    prepare_directory(image_directory)
+
     with open(file_name, 'r', encoding='utf-8') as f:
         content = f.read()
 
+    description = get_description_from_content(content)
     image_data_list = fetch_image_data_from_text(content)
-
-    name = str(os.path.basename(file_name)).replace('.html', '').lower()
-    image_directory = os.path.join(directory_for_save, name)
-    prepare_directory(image_directory)
 
     web_loader = WebLoader()
     for image_data in image_data_list:
@@ -88,8 +116,13 @@ def read_file_and_extract_images(file_name: str, directory_for_save: str):
 
         save_raw_image_to_file(raw_image, image_file_name)
 
-    save_description(image_directory, image_data_list)
+    description_data = \
+        {
+            'description': description,
+            'image_data': image_data_list,
+        }
 
+    save_description(image_directory, description_data)
 
 
 def extract_images(source_directory: str, dest_directory):
@@ -97,6 +130,3 @@ def extract_images(source_directory: str, dest_directory):
 
     for file in files_for_processing:
         read_file_and_extract_images(file, dest_directory)
-
-
-
