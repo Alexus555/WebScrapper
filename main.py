@@ -2,8 +2,7 @@ import json
 import config
 import logging
 import sys
-import content_extractor
-import image_extractor
+from yandex import content_extractor, image_extractor
 
 
 def extract_content():
@@ -11,7 +10,9 @@ def extract_content():
         data_for_processing = json.load(f)
 
     for data in data_for_processing:
-        content_extractor.fetch_raw_data(data, config.SEARCH_ENGINE_URL, config.RAW_DATA_PATH)
+        result = content_extractor.fetch_raw_data(data, config.SEARCH_ENGINE_URL, config.RAW_DATA_PATH)
+        if result == 'banned':
+            return
 
 
 def extract_images():

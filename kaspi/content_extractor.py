@@ -10,7 +10,8 @@ def save_content_to_file(web_content, file_name):
         logging.info(f'Content saved to file {file_name}')
 
 
-def fetch_raw_data(data, source_url, data_directory) -> None:
+def fetch_raw_data(data, source_url, data_directory) -> str:
+
     barcode = data['barcode']
     name = data['name']
 
@@ -20,7 +21,8 @@ def fetch_raw_data(data, source_url, data_directory) -> None:
 
     if os.path.exists(page_file_name):
         logging.info(f'File {page_file_name} already exists. Skipped')
-        return
+        result = 'exists'
+        return result
 
     url = source_url % name
 
@@ -28,8 +30,12 @@ def fetch_raw_data(data, source_url, data_directory) -> None:
     web_loader = WebLoader()
     web_content = web_loader.fetch_text_data(url)
 
-    if str(web_content).find('Ban page condition') > 0:
-        logging.info(f'Scrapper are banned by search engine. Skipped...')
-        return
+    if str(web_content).find('Kaspi Магазин') == -1:
+        logging.warning(f'Scrapper are banned by search engine. Skipped...')
+        result = 'banned'
+        return result
 
     save_content_to_file(web_content, page_file_name)
+
+    result = 'success'
+    return result
