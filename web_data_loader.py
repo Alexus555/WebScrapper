@@ -1,6 +1,8 @@
 import time
 
 import requests
+from selenium.webdriver.common.by import By
+
 import ssl_warning_suppressor
 from selenium import webdriver
 
@@ -42,6 +44,32 @@ class WebLoader:
                     return response.text
 
             response.raise_for_status()
+
+    def find_and_fetch_text_data(
+            self,
+            url: str,
+            string_for_search: str,
+            input_control: str,
+            submit_control: str) -> str:
+        if self._request_executor == 'selenium':
+            try:
+                self._driver.get(url)
+
+                self._driver.find_element(by=By.CLASS_NAME, value=input_control).send_keys(string_for_search)
+                self._driver.find_element(by=By.CLASS_NAME, value=submit_control).click()
+
+                time.sleep(5)
+
+                page_source = self._driver.page_source
+
+                self._driver.close()
+            except Exception as e:
+                page_source = str(e)
+
+            return page_source
+
+        else:
+            return 'Not supported'
 
     def fetch_image_data(self, url: str):
         with ssl_warning_suppressor.no_ssl_verification():

@@ -24,11 +24,13 @@ def fetch_raw_data(data, source_url, data_directory) -> str:
         result = 'exists'
         return result
 
-    url = source_url % name
+    #url = source_url % name
+    url = source_url
 
     logging.info(f'Fetching data from {url}')
     web_loader = WebLoader(request_executor='selenium')
-    web_content = web_loader.fetch_text_data(url)
+    #web_content = web_loader.fetch_text_data(url)
+    web_content = web_loader.find_and_fetch_text_data(url, name, 'input__control', 'websearch-button')
 
     if str(web_content).find('Яндекс Картинки') == -1:
         logging.warning(f'Scrapper are banned by search engine. Skipped...')

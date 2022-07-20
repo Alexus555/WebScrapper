@@ -2,5 +2,7 @@ PROCESSING_LIST = '.\\data\\barcodes.json'
 RAW_DATA_PATH = '.\\data\\raw_data'
 PREP_DATA_PATH = '.\\data\\prepared_data'
 
-SEARCH_ENGINE_URL = 'https://yandex.kz/images/search?text=%s'
-#SEARCH_ENGINE_URL = 'https://kaspi.kz/shop/search/?text=%s'
+SEARCH_ENGINE_URL = 'https://yandex.kz/images'
+
+SEARCH_CATEGORY_URL = 'https://biosfera.kz'
+DIRETORY_FOR_PROCESSING = '.\\data\\processing'
