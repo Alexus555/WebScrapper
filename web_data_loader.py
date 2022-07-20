@@ -34,7 +34,7 @@ class WebLoader:
         if self._request_executor == 'selenium':
             self._driver.get(url)
             page_source = self._driver.page_source
-            self._driver.close()
+            #self._driver.close()
             return page_source
 
         else:
@@ -62,7 +62,7 @@ class WebLoader:
 
                 page_source = self._driver.page_source
 
-                self._driver.close()
+                #self._driver.close()
             except Exception as e:
                 page_source = str(e)
 

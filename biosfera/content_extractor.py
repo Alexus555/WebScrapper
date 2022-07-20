@@ -33,7 +33,7 @@ def get_category_name_from_content(text: str) -> str:
 
     category_name = ''
     if categories_list is not None:
-        url = categories_list.find_all('a')[1]
+        category_name = categories_list.find_all('a')[1].text
 
     return category_name
 
@@ -61,17 +61,25 @@ def fetch_raw_data(data, source_url, data_directory) -> str:
 
         web_content = web_loader.find_and_fetch_text_data(url, str_to_search, 'searchSend', 'button-search')
 
+        if str(web_content).find('is not clickable at point') > -1:
+            continue
+
         if str(web_content).find('Поиск товаров') == -1:
             logging.warning(f'Scrapper are banned by search engine. Skipped...')
             result = 'banned'
             return result
 
-        if str(web_content).find('ничего не найдено') == -1:
+        if str(web_content).find('ничего не найдено') > -1:
             continue
 
         product_url = get_url_from_content(web_content)
 
         break
+
+    if not product_url:
+        logging.warning(f'Found nothing')
+        result = 'failed'
+        return result
 
     product_info_page = web_loader.fetch_text_data(product_url)
 
