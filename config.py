@@ -6,3 +6,4 @@ SEARCH_ENGINE_URL = 'https://yandex.kz/images'
 
 SEARCH_CATEGORY_URL = 'https://biosfera.kz'
 DIRETORY_FOR_PROCESSING = '.\\data\\processing'
+COLLECTED_DATA_PATH = '.\\data\\collected_data'
